@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的 GitHub 個人頁面</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            padding: 40px 0;
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid white;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .profile-img:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .tab-btn.active {
+            background: #5a67d8;
+            color: white;
+        }
+
+        .content-box {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: none;
+        }
+
+        .content-box.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .project-card {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .project-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .skill-tag:hover {
+            background: #764ba2;
+            transform: scale(1.1);
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .submit-btn {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #764ba2;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5em;
+            transition: transform 0.3s;
+        }
+
+        .social-links a:hover {
+            transform: scale(1.3);
+        }
+
+        #scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #667eea;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+        }
+
+        #scroll-top:hover {
+            background: #764ba2;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="https://via.placeholder.com/150" alt="Profile" class="profile-img" id="profileImg">
+            <h1>CCHung</h1>
+            <p class="subtitle">GitHub personal page</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="about">關於我</button>
+            <button class="tab-btn" data-tab="skills">要求內容</button>
+        </div>
+
+        <div id="about" class="content-box active">
+            <h2>關於我</h2>
+            <p style="line-height: 1.8; margin-top: 20px;">
+                正在學習的大學生。
+                東學一下西學一下。
+            </p>
+            <p style="line-height: 1.8; margin-top: 15px;">
+                相信透過學習能有更好的進步?
+            </p>
+        </div>
+
+        <div id="skills" class="content-box">
+            <h2>要求內容</h2>
+            <div style="margin-top: 20px;">
+                <h3 style="margin-bottom: 15px;">前端技術</h3>
+                <span class="skill-tag">HTML5</span>
+                <span class="skill-tag">CSS3</span>
+                <span class="skill-tag">jQuery</span>
+            </div>
+            <div style="margin-top: 30px;">
+                <h3 style="margin-bottom: 15px;">後端技術</h3>
+                <span class="skill-tag">Python</span>
+            </div>
+        </div>
+    </div>
+
+    <button id="scroll-top">↑</button>
+
+    <script>
+        $(document).ready(function() {
+            // Header 淡入動畫
+            $('header').animate({
+                opacity: 1,
+                marginTop: '0'
+            }, 1000);
+
+            // 標籤切換功能
+            $('.tab-btn').click(function() {
+                var tabId = $(this).data('tab');
+                
+                $('.tab-btn').removeClass('active');
+                $(this).addClass('active');
+                
+                $('.content-box').removeClass('active');
+                $('#' + tabId).addClass('active');
+            });
+
+            // 專案卡片點擊效果
+            $('.project-card').click(function() {
+                $(this).fadeOut(200).fadeIn(200);
+            });
+
+            // 技能標籤點擊效果
+            $('.skill-tag').click(function() {
+                $(this).animate({
+                    fontSize: '1.2em'
+                }, 200).animate({
+                    fontSize: '1em'
+                }, 200);
+            });
+
+            // 大頭照點擊效果
+            $('#profileImg').click(function() {
+                $(this).animate({
+                    width: '180px',
+                    height: '180px'
+                }, 300).animate({
+                    width: '150px',
+                    height: '150px'
+                }, 300);
+            });
+
+            // 表單提交
+            $('.contact-form').submit(function(e) {
+                e.preventDefault();
+                alert('感謝您的訊息！我會盡快回覆您 😊');
+                $(this)[0].reset();
+            });
+
+            // 滾動到頂部按鈕
+            $(window).scroll(function() {
+                if ($(this).scrollTop() > 300) {
+                    $('#scroll-top').fadeIn();
+                } else {
+                    $('#scroll-top').fadeOut();
+                }
+            });
+
+            $('#scroll-top').click(function() {
+                $('html, body').animate({scrollTop: 0}, 800);
+            });
+
+            // 滑鼠移入效果
+            $('.project-card').hover(
+                function() {
+                    $(this).css('background', '#edf2f7');
+                },
+                function() {
+                    $(this).css('background', '#f7fafc');
+                }
+            );
+        });
+    </script>
+</body>
+</html>
