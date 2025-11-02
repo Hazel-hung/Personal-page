@@ -295,24 +295,6 @@
                 }, 200);
             });
 
-            // 大頭照點擊效果
-            $('#profileImg').click(function() {
-                $(this).animate({
-                    width: '180px',
-                    height: '180px'
-                }, 300).animate({
-                    width: '150px',
-                    height: '150px'
-                }, 300);
-            });
-
-            // 表單提交
-            $('.contact-form').submit(function(e) {
-                e.preventDefault();
-                alert('感謝您的訊息！我會盡快回覆您 😊');
-                $(this)[0].reset();
-            });
-
             // 滾動到頂部按鈕
             $(window).scroll(function() {
                 if ($(this).scrollTop() > 300) {
@@ -339,3 +321,4 @@
     </script>
 </body>
 </html>
+
